@@ -1,77 +1,113 @@
 package com.tkmrqq.pmsapp
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.padding
-import androidx.compose.runtime.Composable
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import com.tkmrqq.pmsapp.ui.screen.AccountScreen
-import com.tkmrqq.pmsapp.ui.screen.CartScreen
-import com.tkmrqq.pmsapp.ui.theme.PMSAppTheme
-import com.tkmrqq.pmsapp.ui.screen.HomeScreen;
+import android.view.View
+import android.widget.FrameLayout
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.tkmrqq.pmsapp.ui.screen.HomeFragment
+import com.tkmrqq.pmsapp.ui.screen.AccountFragment
+import com.tkmrqq.pmsapp.ui.screen.CartFragment
+import com.tkmrqq.pmsapp.ui.screen.LoginFragment
+import com.tkmrqq.pmsapp.ui.screen.SignupFragment
 
+class MainActivity : AppCompatActivity() {
 
-class MainActivity : ComponentActivity() {
+    private lateinit var viewPager: ViewPager2
+    private lateinit var bottomNavigationView: BottomNavigationView
+    private var isLoggedIn: Boolean = false;
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-//        setContentView(R.layout.activity_login)
+        setContentView(R.layout.activity_main)
 
-        setContent{
-            PMSAppTheme { MainScreen() }
+        val sharedPreferences = getSharedPreferences("user_prefs", 0)
+        isLoggedIn = sharedPreferences.getBoolean("is_logged_in", false)
+
+        viewPager = findViewById(R.id.viewPager)
+        bottomNavigationView = findViewById(R.id.bottom_navigation)
+
+        val adapter = ViewPagerAdapter(this)
+        viewPager.adapter = adapter
+
+        // Связь BottomNavigationBar с ViewPager2
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> viewPager.currentItem = 0
+                R.id.nav_cart -> viewPager.currentItem = 1
+                R.id.nav_account -> {
+                    if(isLoggedIn){
+                        viewPager.currentItem = 2
+                    }
+                    else { openLoginFragment() }
+                }
+            }
+            true
         }
+
+        // Связь ViewPager2 с BottomNavigationBar
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                when (position) {
+                    0 -> bottomNavigationView.selectedItemId = R.id.nav_home
+                    1 -> bottomNavigationView.selectedItemId = R.id.nav_cart
+                    2 -> bottomNavigationView.selectedItemId = R.id.nav_account
+                }
+            }
+        })
+    }
+    private fun openLoginFragment() {
+        val loginFragment = LoginFragment(
+            onLoginResult = { result ->
+                if (result) {
+                    isLoggedIn = true
+                    viewPager.currentItem = 2
+                    closeLoginFragment()
+                }
+            },
+            onSignUpClick = { openSignupFragment() }
+        )
+
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, loginFragment)
+            .addToBackStack(null)
+            .commit()
+        findViewById<FrameLayout>(R.id.fragment_container).visibility = View.VISIBLE
+    }
+
+    private fun closeLoginFragment() {
+        supportFragmentManager.popBackStack()
+        findViewById<FrameLayout>(R.id.fragment_container).visibility = View.GONE
+    }
+
+    private fun openSignupFragment() {
+        val signupFragment = SignupFragment()
+
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, signupFragment)
+            .addToBackStack(null)
+            .commit()
+
+        findViewById<FrameLayout>(R.id.fragment_container).visibility = View.VISIBLE
     }
 }
 
+class ViewPagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity) {
+    override fun getItemCount(): Int {
+        return 3 // Количество вкладок
+    }
 
-@Composable
-fun MainScreen() {
-    var selectedItem by remember { mutableIntStateOf(0) }
-
-    Scaffold(
-        bottomBar = { BottomNavigationBar(selectedItem) { selectedItem = it } }
-    ) { innerPadding ->
-        when (selectedItem) {
-            0 -> HomeScreen(Modifier.padding(innerPadding))
-            1 -> CartScreen(Modifier.padding(innerPadding))
-            2 -> AccountScreen(Modifier.padding(innerPadding))
+    override fun createFragment(position: Int): Fragment {
+        return when (position) {
+            0 -> HomeFragment()
+            1 -> CartFragment()
+            2 -> AccountFragment()
+            else -> HomeFragment()
         }
     }
 }
-
-@Composable
-fun BottomNavigationBar(selectedItem: Int, onItemSelected: (Int) -> Unit) {
-    val items = listOf("Home", "Cart", "Account")
-    val icons = listOf(
-        Icons.Filled.Home,
-        Icons.Filled.ShoppingCart,
-        Icons.Filled.AccountCircle
-    )
-    NavigationBar {
-        items.forEachIndexed { index, item ->
-            NavigationBarItem(
-                icon = { Icon(icons[index], contentDescription = item) },
-                label = { Text(item) },
-                selected = selectedItem == index,
-                onClick = { onItemSelected(index) }
-            )
-        }
-    }
-}
-
-

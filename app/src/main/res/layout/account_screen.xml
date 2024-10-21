@@ -1,16 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
     android:padding="16dp">
 
+    <!-- Кружок с текстом U -->
+    <RelativeLayout
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:background="@android:color/darker_gray"
+        android:gravity="center"
+        android:clipToPadding="false"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="U"
+            android:textSize="36sp"
+            android:textColor="@android:color/white"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+
     <TextView
         android:id="@+id/accountTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="This is the Account Screen"
-        android:textSize="24sp" />
+        android:text="@string/profile"
+        android:textSize="24sp"
+        android:layout_marginTop="16dp"/>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/ic_menu_gallery"
+        tools:srcCompat="@tools:sample/avatars"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Заказы:"
+        android:layout_marginTop="16dp" />
+
+    <!-- Контейнер для карточек заказов -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="8dp">
+
+        <!-- Заглушка для заказа 1 -->
+        <CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="@android:color/darker_gray">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Заказ 1"
+                android:padding="16dp"
+                android:textColor="@android:color/white"/>
+        </CardView>
+
+        <!-- Заглушка для заказа 2 -->
+        <CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="@android:color/darker_gray">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Заказ 2"
+                android:padding="16dp"
+                android:textColor="@android:color/white"/>
+        </CardView>
+
+        <!-- Заглушка для заказа 3 -->
+        <CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="@android:color/darker_gray">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Заказ 3"
+                android:padding="16dp"
+                android:textColor="@android:color/white"/>
+        </CardView>
+    </LinearLayout>
 </LinearLayout>

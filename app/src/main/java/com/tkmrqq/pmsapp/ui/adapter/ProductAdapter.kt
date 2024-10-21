@@ -29,10 +29,9 @@ class ProductAdapter(private val context: Context, private val products: List<Pr
         val product = products[position]
 
         holder.productName.text = product.name
-        holder.productPrice.text = "${product.price} USD"
+        holder.productPrice.text = "${product.price} BYN"
         holder.productDescription.text = product.description
-
-        //Glide.with(context).load(product.imageUrl).into(holder.productImage)
+//        Glide.with(context).load(product.imageUrl).into(holder.productImage)
     }
 
     override fun getItemCount(): Int = products.size

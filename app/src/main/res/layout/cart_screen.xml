@@ -1,17 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- res/layout/cart_screen.xml -->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
     android:padding="16dp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/cartTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="This is the Cart Screen"
+        android:fontFamily="@font/inter_semibold"
+        android:text="Корзина"
         android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/inCart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter_semibold"
+        android:text="В корзине"
+        android:textSize="24sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="256dp"></androidx.recyclerview.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/sumPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter_medium"
+        android:text="Итого: "
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/delivery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter_semibold"
+        android:text="Доставка: "
+        android:textSize="24sp" />
+
+    <EditText
+        android:id="@+id/editTextTextPostalAddress"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:ems="10"
+        android:inputType="textPostalAddress"
+        android:text="Почта" />
+
+    <EditText
+        android:id="@+id/editTextPhone"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:ems="10"
+        android:inputType="phone"
+        android:text="Номер телефона" />
+
+    <EditText
+        android:id="@+id/editTextTextEmailAddress"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        android:text="E-mail" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#000000"
+        android:fontFamily="@font/inter_medium"
+        android:text="Заказать"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp" />
+
 </LinearLayout>
+    </ScrollView>
+
+    </LinearLayout>
