@@ -1,12 +1,13 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("kotlin-parcelize")
+    id("kotlin-kapt")
 }
 
 android {
     namespace = "com.tkmrqq.pmsapp"
     compileSdk = 34
-
     defaultConfig {
         applicationId = "com.tkmrqq.pmsapp"
         minSdk = 34
@@ -50,6 +51,8 @@ android {
 }
 
 dependencies {
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+    kapt("com.github.bumptech.glide:compiler:4.15.1")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
