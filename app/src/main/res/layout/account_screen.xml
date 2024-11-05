@@ -44,55 +44,12 @@
         android:text="Заказы:"
         android:layout_marginTop="16dp" />
 
-    <!-- Контейнер для карточек заказов -->
-    <LinearLayout
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/ordersRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="8dp">
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:backgroundTint="@android:color/darker_gray">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Заказ 1"
-                android:padding="16dp"
-                android:textColor="@android:color/white"/>
-        </androidx.cardview.widget.CardView>
-
-        <!-- Заглушка для заказа 2 -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:backgroundTint="@android:color/darker_gray">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Заказ 2"
-                android:padding="16dp"
-                android:textColor="@android:color/white"/>
-        </androidx.cardview.widget.CardView>
-
-        <!-- Заглушка для заказа 3 -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:backgroundTint="@android:color/darker_gray">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Заказ 3"
-                android:padding="16dp"
-                android:textColor="@android:color/white"/>
-        </androidx.cardview.widget.CardView>
-    </LinearLayout>
+        android:layout_marginTop="8dp"
+        tools:itemCount="5"
+        tools:listitem="@layout/item_order" />
 </LinearLayout>

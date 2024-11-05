@@ -1,29 +1,31 @@
 package com.tkmrqq.pmsapp.ui.screen
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.tkmrqq.pmsapp.R
 import androidx.activity.OnBackPressedCallback
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.tkmrqq.pmsapp.data.model.Product
+import com.tkmrqq.pmsapp.ui.viewModel.CartViewModel
 
 class ProductDetailFragment : Fragment() {
 
     companion object {
         private const val ARG_PRODUCT = "product"
 
-        fun newInstance(name: String, price: Double, description: String, imageUrl: String): ProductDetailFragment {
+        fun newInstance(product: Product): ProductDetailFragment {
             val fragment = ProductDetailFragment()
             val bundle = Bundle()
-            bundle.putString("name", name)
-            bundle.putDouble("price", price)
-            bundle.putString("description", description)
-            bundle.putString("imageUrl", imageUrl)
+            bundle.putParcelable(ARG_PRODUCT, product)
             fragment.arguments = bundle
             return fragment
         }
@@ -36,35 +38,40 @@ class ProductDetailFragment : Fragment() {
         return inflater.inflate(R.layout.product_screen, container, false)
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val name = arguments?.getString("name")
         val price = arguments?.getDouble("price")
         val description = arguments?.getString("description")
-        val imageUrl = arguments?.getString("imageUrl")
+        val imageResId = arguments?.getInt("imageResId")
 
-        view.findViewById<TextView>(R.id.productNameDetail).text = name
-        view.findViewById<TextView>(R.id.productPriceDetail).text = "$price $"
-        view.findViewById<TextView>(R.id.productDescriptionDetail).text = description
-//        Glide.with(this).load(imageUrl).into(view.findViewById(R.id.productImageDetail))
+        val product = arguments?.getParcelable(ARG_PRODUCT, Product::class.java)
+
+        product?.let {
+            view.findViewById<TextView>(R.id.productNameDetail).text = it.name
+            view.findViewById<TextView>(R.id.productPriceDetail).text = "${it.price} BYN"
+            view.findViewById<TextView>(R.id.productDescriptionDetail).text = it.description
+            Glide.with(this).load(it.imageResId).into(view.findViewById(R.id.productImageDetail))
+        }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                // Скрываем фрагмент и возвращаем видимость recyclerView
                 activity?.findViewById<FrameLayout>(R.id.fragment_container)?.visibility = View.GONE
                 activity?.findViewById<RecyclerView>(R.id.recyclerView)?.visibility = View.VISIBLE
                 // Возвращаемся на предыдущий экран
                 parentFragmentManager.popBackStack()
             }
         })
-//        val cartViewModel = (activity as MainActivity).cartViewModel
-//        view.findViewById<Button>(R.id.button4).setOnClickListener{
-//            val product = Product(id, name, price, description, imageUrl)
-//            cartViewModel.addItem(product)
-//        }
 
+        val cartViewModel = ViewModelProvider(requireActivity()).get(CartViewModel::class.java)
+        val button = view.findViewById<Button>(R.id.button4)
+        button.setOnClickListener{
+            product?.let {
+            cartViewModel.addItem(it)
+            Toast.makeText(requireContext(), "Product added to cart", Toast.LENGTH_LONG).show()
+            } ?: Toast.makeText(requireContext(), "Product not available", Toast.LENGTH_LONG).show()
+        }
     }
 }
 

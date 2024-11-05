@@ -25,11 +25,13 @@ class HomeFragment() : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val products: List<Product> = listOf(
-            Product(1,"Shirt", 25.99, "qweqwe", R.drawable.yoru),
-            Product(2,"Pants", 40.13, "desc", R.drawable.yoru),
-            Product(3,"Jacket", 60.30, "desc", R.drawable.yoru),
-            Product(4,"Hoodie", 60.30, "desc", R.drawable.yoru),
-            Product(5,"T-Shirt", 69.30, "beautiful cotton t-shirt", R.drawable.yoru),
+            Product(1,"Shirt", 49.00, "qweqwe", R.drawable.yoru),
+            Product(2,"Jeans", 39.00, "desc", R.drawable.jeans),
+            Product(3,"Batnik", 60.00, "desc", R.drawable.batnik),
+            Product(4,"LongSleeve", 60.00, "desc", R.drawable.longsleeve),
+            Product(5,"Shirt", 59.00, "t-shirt with Makima art from Chainsaw-Man", R.drawable.makima),
+            Product(6,"Batnik", 99.00, "batnik with Makima from CSM", R.drawable.makimabatnik),
+            Product(7,"T-Shirt", 69.00, "Hoshino Ai from Oshi no ko", R.drawable.hoshino),
         )
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)

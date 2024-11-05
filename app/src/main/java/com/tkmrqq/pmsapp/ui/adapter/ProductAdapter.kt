@@ -37,21 +37,12 @@ class ProductAdapter(private val context: Context, private val products: List<Pr
         holder.productName.text = product.name
         holder.productPrice.text = "${product.price} BYN"
         holder.productDescription.text = product.description
-
-        when (product.imageUrl){
-            is String -> Glide.with(context).load(product.imageUrl).into(holder.productImage)
-            is Int -> Glide.with(context).load(product.imageUrl).into(holder.productImage)
-        }
+        Glide.with(context).load(product.imageResId).into(holder.productImage)
 
         Log.d("ProductAdapter", "Binding product: ${product.name}")
 
         holder.itemView.setOnClickListener {
-            val fragment = ProductDetailFragment.newInstance(
-                product.name,
-                product.price,
-                product.description,
-                product.imageUrl.toString()
-            )
+            val fragment = ProductDetailFragment.newInstance(product)
             val activity = holder.itemView.context as AppCompatActivity
             activity.findViewById<FrameLayout>(R.id.fragment_container).visibility = View.VISIBLE
             activity.findViewById<RecyclerView>(R.id.recyclerView).visibility = View.GONE

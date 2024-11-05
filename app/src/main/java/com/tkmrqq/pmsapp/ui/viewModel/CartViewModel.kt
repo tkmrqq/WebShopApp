@@ -1,28 +1,59 @@
 // CartViewModel.kt
 package com.tkmrqq.pmsapp.ui.viewModel
 
+import android.icu.text.SimpleDateFormat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.tkmrqq.pmsapp.data.model.CartItem
+import com.tkmrqq.pmsapp.data.model.Order
 import com.tkmrqq.pmsapp.data.model.Product
+import java.util.Date
+import java.util.Locale
+import java.util.UUID
 
 class CartViewModel : ViewModel() {
+    private val _cartItems = MutableLiveData<MutableList<CartItem>>(mutableListOf())
+    val cartItems: LiveData<MutableList<CartItem>> get() = _cartItems
 
-    private val _cartItems = MutableLiveData<MutableList<Product>>(mutableListOf())
-    val cartItems: LiveData<MutableList<Product>> = _cartItems
+    private val _orders = MutableLiveData<List<Order>>(emptyList())
+    val orders: LiveData<List<Order>> get() = _orders
 
     fun addItem(product: Product) {
-        _cartItems.value?.add(product)
-        _cartItems.value = _cartItems.value // Обновление LiveData
+        val existingItem = _cartItems.value?.find { it.product.id == product.id }
+        if (existingItem != null) {
+            existingItem.quantity += 1
+        } else {
+            _cartItems.value?.add(CartItem(product))
+        }
+        _cartItems.notifyObserver()
     }
 
-    fun removeItem(product: Product) {
-        _cartItems.value?.remove(product)
-        _cartItems.value = _cartItems.value // Обновление LiveData
+    fun getCartItems(): List<CartItem> {
+        return _cartItems.value ?: emptyList()
+    }
+
+    fun placeOrder(email: String, phone: String, address: String) {
+        val orderId = UUID.randomUUID().toString()
+        val orderDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
+        val details = "Email: $email, Phone: $phone"
+        val newOrder = Order(orderId, _cartItems.value.orEmpty(), address, orderDate, details)
+        _orders.value = _orders.value.orEmpty() + newOrder
+        clearCart()
+    }
+
+    fun removeItem(cartItem: CartItem) {
+        _cartItems.value = _cartItems.value?.filter { it != cartItem }?.toMutableList()
+        _cartItems.notifyObserver()
     }
 
     fun clearCart() {
-        _cartItems.value?.clear()
-        _cartItems.value = _cartItems.value
+        _cartItems.value = mutableListOf()
+        _cartItems.notifyObserver()
+    }
+
+    private fun MutableLiveData<MutableList<CartItem>>.notifyObserver() {
+        this.value = this.value
     }
 }
+

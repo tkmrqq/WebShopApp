@@ -4,5 +4,6 @@ data class Order (
     val orderId: String,
     val items: List<CartItem>,
     val deliveryAddress: String,
-    val orderDate: String
+    val orderDate: String,
+    val details: String
 )
