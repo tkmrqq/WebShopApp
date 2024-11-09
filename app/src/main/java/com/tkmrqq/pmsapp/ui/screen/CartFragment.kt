@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -60,6 +61,11 @@ class CartFragment : Fragment() {
             }
         }
 
+        val totalPriceTextView = view.findViewById<TextView>(R.id.sumPrice)
+
+        cartViewModel.totalPrice.observe(viewLifecycleOwner) { totalPrice ->
+            totalPriceTextView.text = "Итого: ${"%.2f".format(totalPrice)} BYN"
+        }
 
         cartViewModel.cartItems.observe(viewLifecycleOwner) { cartItems ->
             Log.d("CartFragment", "Observed cart items: $cartItems")

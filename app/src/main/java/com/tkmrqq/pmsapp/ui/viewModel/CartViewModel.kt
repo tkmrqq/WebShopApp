@@ -19,6 +19,9 @@ class CartViewModel : ViewModel() {
     private val _orders = MutableLiveData<List<Order>>(emptyList())
     val orders: LiveData<List<Order>> get() = _orders
 
+    private val _totalPrice = MutableLiveData<Double>()
+    val totalPrice: LiveData<Double> get() = _totalPrice
+
     fun addItem(product: Product) {
         val existingItem = _cartItems.value?.find { it.product.id == product.id }
         if (existingItem != null) {
@@ -26,6 +29,7 @@ class CartViewModel : ViewModel() {
         } else {
             _cartItems.value?.add(CartItem(product))
         }
+        updateTotalPrice()
         _cartItems.notifyObserver()
     }
 
@@ -42,13 +46,20 @@ class CartViewModel : ViewModel() {
         clearCart()
     }
 
+    private fun updateTotalPrice() {
+        val total = _cartItems.value?.sumOf { it.product.price * it.quantity } ?: 0.0
+        _totalPrice.value = total
+    }
+
     fun removeItem(cartItem: CartItem) {
         _cartItems.value = _cartItems.value?.filter { it != cartItem }?.toMutableList()
+        updateTotalPrice()
         _cartItems.notifyObserver()
     }
 
     fun clearCart() {
         _cartItems.value = mutableListOf()
+        updateTotalPrice()
         _cartItems.notifyObserver()
     }
 

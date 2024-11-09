@@ -24,7 +24,7 @@ class OrderAdapter(private val orders: List<Order>) : RecyclerView.Adapter<Order
         // Инициализация вложенного адаптера CartItemAdapter
         val cartItemAdapter = CartItemAdapter(order.items)
         holder.cartItemsRecyclerView.adapter = cartItemAdapter
-        holder.cartItemsRecyclerView.layoutManager = LinearLayoutManager(holder.itemView.context)
+        holder.cartItemsRecyclerView.layoutManager = LinearLayoutManager(holder.itemView.context, LinearLayoutManager.HORIZONTAL, false)
     }
 
     override fun getItemCount(): Int = orders.size

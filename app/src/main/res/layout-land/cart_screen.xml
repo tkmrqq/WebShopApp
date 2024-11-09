@@ -5,12 +5,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:padding="16dp">
 
+    <!-- Блок слева с RecyclerView -->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
         android:orientation="vertical">
 
         <TextView
@@ -25,20 +27,46 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/cartRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="380dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             tools:itemCount="3"
-            tools:listitem="@layout/item_cart_product">
-        </androidx.recyclerview.widget.RecyclerView>
+            tools:listitem="@layout/item_cart_product" />
 
-        <TextView
-            android:id="@+id/sumPrice"
-            android:layout_width="wrap_content"
+    </LinearLayout>
+
+    <!-- Блок справа с информацией и формой заказа -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingStart="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:fontFamily="@font/inter_medium"
-            android:text="Итого: "
-            android:textSize="20sp" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/sumPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="@font/inter_medium"
+                android:text="Итого: "
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/orderButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="128dp"
+                android:background="#000000"
+                android:fontFamily="@font/inter_medium"
+                android:text="Заказать"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/delivery"
@@ -52,14 +80,16 @@
             android:id="@+id/addressInput"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:layout_marginTop="8dp"
             android:ems="10"
             android:inputType="textPostalAddress"
-            android:hint="Адресс" />
+            android:hint="Адрес" />
 
         <EditText
             android:id="@+id/phoneInput"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:layout_marginTop="8dp"
             android:ems="10"
             android:inputType="phone"
             android:hint="Номер телефона" />
@@ -68,21 +98,10 @@
             android:id="@+id/emailInput"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:layout_marginTop="8dp"
             android:ems="10"
             android:inputType="textEmailAddress"
             android:hint="E-mail" />
-
-        <Button
-            android:id="@+id/orderButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:layout_marginBottom="8dp"
-            android:background="#000000"
-            android:fontFamily="@font/inter_medium"
-            android:text="Заказать"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp" />
 
     </LinearLayout>
 

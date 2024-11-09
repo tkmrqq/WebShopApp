@@ -19,11 +19,13 @@ class CartItemAdapter(private val cartItems: List<CartItem>) : RecyclerView.Adap
     override fun onBindViewHolder(holder: CartItemViewHolder, position: Int) {
         val cartItem = cartItems[position]
         cartItem.product.imageResId?.let { holder.productImageView.setImageResource(it) }
+        holder.productName.text = cartItem.product.name
     }
 
     override fun getItemCount(): Int = cartItems.size
 
     class CartItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val productName: TextView = itemView.findViewById(R.id.productName)
         val productImageView: ImageView = itemView.findViewById(R.id.productImageView)
     }
 }

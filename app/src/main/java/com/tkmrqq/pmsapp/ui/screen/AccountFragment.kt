@@ -31,6 +31,7 @@ class AccountFragment : Fragment() {
         val ordersRecyclerView = view.findViewById<RecyclerView>(R.id.ordersRecyclerView)
         ordersRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+
         // Наблюдаем за изменениями в списке заказов
         cartViewModel.orders.observe(viewLifecycleOwner) { orders ->
             ordersRecyclerView.adapter = OrderAdapter(orders)

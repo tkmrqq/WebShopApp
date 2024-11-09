@@ -26,14 +26,23 @@
         android:text="Детали заказа"
         android:textColor="@android:color/white"/>
 
+    <TextView
+        android:id="@+id/orderSum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Сумма заказа"
+        android:textColor="@android:color/white"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/cartItemsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:nestedScrollingEnabled="false"
-        tools:itemCount="6"
-        tools:layoutManager="GridLayoutManager"
+        tools:itemCount="5"
+        tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_cart_item"
-        tools:spanCount="5" />
+        tools:spanCount="5"
+        tools:orientation="horizontal">
+    </androidx.recyclerview.widget.RecyclerView>
   </LinearLayout>
 </androidx.cardview.widget.CardView>

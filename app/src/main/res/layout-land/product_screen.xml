@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="16dp">
+
+    <!-- Картинка продукта слева -->
+    <ImageView
+        android:id="@+id/productImageDetail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_weight="2"
+        android:scaleType="centerInside"
+        android:src="@drawable/yoru" />
+
+    <!-- Блок с информацией справа -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:orientation="vertical">
+
+        <!-- Название продукта -->
+        <TextView
+            android:id="@+id/productNameDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Название:"
+            android:textSize="24sp"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Цена продукта -->
+        <TextView
+            android:id="@+id/productPriceDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Цена:"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Описание продукта -->
+        <TextView
+            android:id="@+id/productDescriptionDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Информация:"
+            android:textSize="16sp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Кнопка добавления в корзину -->
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/black"
+            android:text="В корзину"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="16dp" />
+
+    </LinearLayout>
+</LinearLayout>
