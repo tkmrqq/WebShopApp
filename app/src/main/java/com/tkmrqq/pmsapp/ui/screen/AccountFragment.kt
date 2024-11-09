@@ -31,11 +31,14 @@ class AccountFragment : Fragment() {
         val ordersRecyclerView = view.findViewById<RecyclerView>(R.id.ordersRecyclerView)
         ordersRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+        // Загружаем заказы с элементами
+        cartViewModel.loadOrdersWithItems(orderDao)
 
-        // Наблюдаем за изменениями в списке заказов
-        cartViewModel.orders.observe(viewLifecycleOwner) { orders ->
-            ordersRecyclerView.adapter = OrderAdapter(orders)
+        // Наблюдаем за изменениями в списке заказов с элементами
+        cartViewModel.ordersWithItems.observe(viewLifecycleOwner) { ordersWithItems ->
+            ordersRecyclerView.adapter = OrderAdapter(ordersWithItems)
         }
     }
 }
+
 

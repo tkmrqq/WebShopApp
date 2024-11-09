@@ -52,7 +52,10 @@ android {
 
 dependencies {
     implementation("com.github.bumptech.glide:glide:4.15.1")
+    implementation(libs.androidx.ui.desktop)
     kapt("com.github.bumptech.glide:compiler:4.15.1")
+    implementation ("androidx.room:room-runtime:2.5.0")
+    kapt ("androidx.room:room-compiler:2.5.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

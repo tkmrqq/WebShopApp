@@ -10,20 +10,32 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tkmrqq.pmsapp.R
+import com.tkmrqq.pmsapp.data.dao.OrderDao
 import com.tkmrqq.pmsapp.data.model.Product
 import com.tkmrqq.pmsapp.ui.adapter.CartAdapter
 import com.tkmrqq.pmsapp.ui.adapter.CartItemAdapter
 import com.tkmrqq.pmsapp.ui.adapter.ProductAdapter
 import com.tkmrqq.pmsapp.ui.viewModel.CartViewModel
 
+class CartViewModelFactory(private val orderDao: OrderDao) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(CartViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return CartViewModel(orderDao) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
+}
+
 class CartFragment : Fragment() {
+
     private lateinit var cartViewModel: CartViewModel
     private lateinit var cartAdapter: CartAdapter
-    private lateinit var cartItemAdapter: CartItemAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,42 +47,32 @@ class CartFragment : Fragment() {
         cartAdapter = CartAdapter { cartItem ->
             cartViewModel.removeItem(cartItem)
         }
-        cartItemAdapter = CartItemAdapter(cartViewModel.getCartItems())
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.cartRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = cartAdapter
 
-        val emailInput = view.findViewById<EditText>(R.id.emailInput)
-        val phoneInput = view.findViewById<EditText>(R.id.phoneInput)
-        val addressInput = view.findViewById<EditText>(R.id.addressInput)
+        // Установка обработчика для кнопки оформления заказа
         val orderButton = view.findViewById<Button>(R.id.orderButton)
-
         orderButton.setOnClickListener {
-            val email = emailInput.text.toString()
-            val phone = phoneInput.text.toString()
-            val address = addressInput.text.toString()
-            val cartItems = cartViewModel.getCartItems()
-
-            if (email.isNotBlank() && phone.isNotBlank() && address.isNotBlank()) {
-                cartViewModel.placeOrder(email, phone, address)
-                Toast.makeText(requireContext(), "Order placed successfully!", Toast.LENGTH_LONG).show()
-                cartViewModel.clearCart()
-            } else {
-                Toast.makeText(requireContext(), "Please fill in all details and add items to cart", Toast.LENGTH_SHORT).show()
-            }
+            placeOrder()
         }
 
-        val totalPriceTextView = view.findViewById<TextView>(R.id.sumPrice)
+        // Обновление данных корзины
+        cartViewModel.cartItems.observe(viewLifecycleOwner) { cartItems ->
+            cartAdapter.submitList(cartItems.toList())
+        }
 
+        // Обновление цены
+        val totalPriceTextView = view.findViewById<TextView>(R.id.sumPrice)
         cartViewModel.totalPrice.observe(viewLifecycleOwner) { totalPrice ->
             totalPriceTextView.text = "Итого: ${"%.2f".format(totalPrice)} BYN"
         }
 
-        cartViewModel.cartItems.observe(viewLifecycleOwner) { cartItems ->
-            Log.d("CartFragment", "Observed cart items: $cartItems")
-            cartAdapter.submitList(cartItems.toList()) // обновление данных в адаптере
-        }
         return view
+    }
+
+    private fun placeOrder() {
+        // Логика оформления заказа
     }
 }

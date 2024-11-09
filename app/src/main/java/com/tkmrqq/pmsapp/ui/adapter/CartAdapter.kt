@@ -10,11 +10,18 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.tkmrqq.pmsapp.R
+import com.tkmrqq.pmsapp.data.dao.ProductDao
 import com.tkmrqq.pmsapp.data.model.CartItem
 import com.tkmrqq.pmsapp.data.model.Product
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class CartAdapter(private val onRemoveItem: (CartItem) -> Unit) :
-    RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
+class CartAdapter(
+    private val productDao: ProductDao,
+    private val onRemoveItem: (CartItem) -> Unit
+) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
 
     private var cartItems = mutableListOf<CartItem>()
 
@@ -38,7 +45,7 @@ class CartAdapter(private val onRemoveItem: (CartItem) -> Unit) :
         notifyDataSetChanged()
     }
 
-    class CartViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class CartViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val productName: TextView = itemView.findViewById(R.id.productNameCart)
         private val productPrice: TextView = itemView.findViewById(R.id.productPriceCart)
         private val productQuantity: TextView = itemView.findViewById(R.id.productQuantity)
@@ -46,14 +53,22 @@ class CartAdapter(private val onRemoveItem: (CartItem) -> Unit) :
         val removeButton: Button = itemView.findViewById(R.id.removeButton)
 
         fun bind(cartItem: CartItem) {
-            productName.text = cartItem.product.name
-            productPrice.text = "${cartItem.product.price} BYN"
             productQuantity.text = "Количество: ${cartItem.quantity}"
-            // Используйте Glide для загрузки изображения
-            Glide.with(itemView.context)
-                .load(cartItem.product.imageResId)
-                .placeholder(R.drawable.default_image)
-                .into(productImage)
+
+            // Загружаем данные продукта по productId асинхронно
+            CoroutineScope(Dispatchers.Main).launch {
+                val product = withContext(Dispatchers.IO) {
+                    productDao.getProductById(cartItem.productId)
+                }
+                product?.let {
+                    productName.text = it.name
+                    productPrice.text = "${it.price} BYN"
+                    Glide.with(itemView.context)
+                        .load(it.imageResId)
+                        .placeholder(R.drawable.default_image)
+                        .into(productImage)
+                }
+            }
         }
     }
 }

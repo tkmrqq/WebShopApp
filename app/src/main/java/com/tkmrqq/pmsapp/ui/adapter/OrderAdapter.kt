@@ -7,9 +7,14 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tkmrqq.pmsapp.R
+import com.tkmrqq.pmsapp.data.dao.ProductDao
+import com.tkmrqq.pmsapp.data.model.CartItem
 import com.tkmrqq.pmsapp.data.model.Order
 
-class OrderAdapter(private val orders: List<Order>) : RecyclerView.Adapter<OrderAdapter.OrderViewHolder>() {
+class OrderAdapter(
+    private val productDao: ProductDao,
+    private val ordersWithItems: Map<Order, List<CartItem>>
+) : RecyclerView.Adapter<OrderAdapter.OrderViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrderViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_order, parent, false)
@@ -17,17 +22,23 @@ class OrderAdapter(private val orders: List<Order>) : RecyclerView.Adapter<Order
     }
 
     override fun onBindViewHolder(holder: OrderViewHolder, position: Int) {
-        val order = orders[position]
+        val order = ordersWithItems.keys.toList()[position]
+        val cartItems = ordersWithItems[order] ?: emptyList()
+
         holder.orderTitle.text = "Заказ ${position + 1}"
         holder.orderDetails.text = order.details
 
-        // Инициализация вложенного адаптера CartItemAdapter
-        val cartItemAdapter = CartItemAdapter(order.items)
+        val cartItemAdapter = CartItemAdapter(productDao)
         holder.cartItemsRecyclerView.adapter = cartItemAdapter
-        holder.cartItemsRecyclerView.layoutManager = LinearLayoutManager(holder.itemView.context, LinearLayoutManager.HORIZONTAL, false)
+        holder.cartItemsRecyclerView.layoutManager = LinearLayoutManager(
+            holder.itemView.context, LinearLayoutManager.HORIZONTAL, false
+        )
+
+        // Передаем список cartItems в адаптер
+        cartItemAdapter.submitList(cartItems)
     }
 
-    override fun getItemCount(): Int = orders.size
+    override fun getItemCount(): Int = ordersWithItems.size
 
     class OrderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val orderTitle: TextView = itemView.findViewById(R.id.orderTitle)
@@ -35,3 +46,4 @@ class OrderAdapter(private val orders: List<Order>) : RecyclerView.Adapter<Order
         val cartItemsRecyclerView: RecyclerView = itemView.findViewById(R.id.cartItemsRecyclerView)
     }
 }
+
