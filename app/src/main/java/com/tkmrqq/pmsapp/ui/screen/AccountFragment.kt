@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tkmrqq.pmsapp.R
+import com.tkmrqq.pmsapp.data.dao.OrderDao
 import com.tkmrqq.pmsapp.ui.adapter.OrderAdapter
 import com.tkmrqq.pmsapp.ui.viewModel.CartViewModel
 
@@ -16,6 +17,7 @@ import com.tkmrqq.pmsapp.ui.viewModel.CartViewModel
 class AccountFragment : Fragment() {
 
     private lateinit var cartViewModel: CartViewModel
+    private lateinit var orderDao: OrderDao
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

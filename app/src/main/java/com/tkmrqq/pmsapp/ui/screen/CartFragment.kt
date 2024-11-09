@@ -14,37 +14,42 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.tkmrqq.pmsapp.App
 import com.tkmrqq.pmsapp.R
+import com.tkmrqq.pmsapp.data.CartViewModelFactory
 import com.tkmrqq.pmsapp.data.dao.OrderDao
+import com.tkmrqq.pmsapp.data.dao.ProductDao
 import com.tkmrqq.pmsapp.data.model.Product
 import com.tkmrqq.pmsapp.ui.adapter.CartAdapter
 import com.tkmrqq.pmsapp.ui.adapter.CartItemAdapter
 import com.tkmrqq.pmsapp.ui.adapter.ProductAdapter
 import com.tkmrqq.pmsapp.ui.viewModel.CartViewModel
 
-class CartViewModelFactory(private val orderDao: OrderDao) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(CartViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return CartViewModel(orderDao) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
-}
-
 class CartFragment : Fragment() {
 
     private lateinit var cartViewModel: CartViewModel
     private lateinit var cartAdapter: CartAdapter
+    private lateinit var orderDao: OrderDao
+    private lateinit var productDao: ProductDao
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.cart_screen, container, false)
-        cartViewModel = ViewModelProvider(requireActivity()).get(CartViewModel::class.java)
 
-        cartAdapter = CartAdapter { cartItem ->
+        // Получаем экземпляры orderDao и productDao из базы данных
+        val database = (requireContext().applicationContext as App).database
+        val application = requireActivity().application as App
+        orderDao = database.orderDao()
+        productDao = database.productDao()
+
+        // Используем фабрику для создания экземпляра CartViewModel
+        val factory = CartViewModelFactory(application, orderDao)
+        cartViewModel = ViewModelProvider(this, factory).get(CartViewModel::class.java)
+
+        // Инициализируем адаптер с productDao
+        cartAdapter = CartAdapter(productDao) { cartItem ->
             cartViewModel.removeItem(cartItem)
         }
 
@@ -76,3 +81,4 @@ class CartFragment : Fragment() {
         // Логика оформления заказа
     }
 }
+

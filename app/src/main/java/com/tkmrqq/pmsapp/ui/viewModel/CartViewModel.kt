@@ -19,10 +19,14 @@ import java.util.Date
 import java.util.Locale
 import java.util.UUID
 
-class CartViewModel(application: Application) : AndroidViewModel(application) {
+class CartViewModel(
+    private val application: Application,
+    private val orderDao: OrderDao
+
+) : AndroidViewModel(application) {
     private val db: AppDatabase = (application as App).database
     private val cartDao = db.cartDao()
-    private val orderDao = db.orderDao()
+//    private val orderDao = db.orderDao()
     private val productDao = db.productDao()
 
     private val _cartItems = MutableLiveData<MutableList<CartItem>>(mutableListOf())
