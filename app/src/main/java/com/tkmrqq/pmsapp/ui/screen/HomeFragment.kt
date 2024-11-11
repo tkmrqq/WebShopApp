@@ -1,18 +1,31 @@
 package com.tkmrqq.pmsapp.ui.screen
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tkmrqq.pmsapp.R
 import com.tkmrqq.pmsapp.data.model.Product
 import com.tkmrqq.pmsapp.ui.adapter.ProductAdapter
+import com.tkmrqq.pmsapp.data.model.CartLibrary
 
 class HomeFragment() : Fragment() {
+
+    companion object {
+        init {
+            System.loadLibrary("native-lib")
+        }
+    }
+
+    external fun findProducts(products: Array<Product>, name: String): Array<Product>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -23,6 +36,10 @@ class HomeFragment() : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        //nativeLib Test
+        Log.d("LIB TEST",(CartLibrary().addTwoNumbers(1,2)).toString())
+        //end
 
         val products: List<Product> = listOf(
             Product(1,"Shirt", 49.00, "qweqwe", R.drawable.yoru),
@@ -36,9 +53,31 @@ class HomeFragment() : Fragment() {
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = ProductAdapter(requireContext(), products)
-        Log.d("HomeFragment", "Number of products ${products.size}")
-        Log.d("HomeFragment", "RecyclerView adapter set")
 
+        val productAdapter = ProductAdapter(requireContext(), products)
+        recyclerView.adapter = productAdapter
+
+        val searchEditText = view.findViewById<EditText>(R.id.searchEditText)
+
+        searchEditText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                val keyword = s.toString()
+
+                // Если поле пустое, отображаем все продукты, иначе фильтруем
+                val foundProducts = if (keyword.isBlank()) {
+                    products.toTypedArray()
+                } else {
+                    findProducts(products.toTypedArray(), keyword)
+                }
+
+                productAdapter.updateData(foundProducts.toList())
+                Log.d("HomeFragment", "Number of products: ${products.size}")
+                Log.d("HomeFragment", "Number of found products: ${foundProducts.size}")
+                Log.d("HomeFragment", "RecyclerView adapter updated")
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
     }
 }

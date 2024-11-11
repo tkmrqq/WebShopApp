@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -59,6 +60,7 @@ class ProductDetailFragment : Fragment() {
             override fun handleOnBackPressed() {
                 activity?.findViewById<FrameLayout>(R.id.fragment_container)?.visibility = View.GONE
                 activity?.findViewById<RecyclerView>(R.id.recyclerView)?.visibility = View.VISIBLE
+                activity?.findViewById<LinearLayout>(R.id.searchLayout)?.visibility = View.VISIBLE
                 // Возвращаемся на предыдущий экран
                 parentFragmentManager.popBackStack()
             }

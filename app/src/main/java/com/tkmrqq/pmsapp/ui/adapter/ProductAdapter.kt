@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +17,7 @@ import com.tkmrqq.pmsapp.R
 import com.tkmrqq.pmsapp.data.model.Product
 import com.tkmrqq.pmsapp.ui.screen.ProductDetailFragment
 
-class ProductAdapter(private val context: Context, private val products: List<Product>) :
+class ProductAdapter(private val context: Context, private var products: List<Product>) :
     RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
     class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -46,11 +47,18 @@ class ProductAdapter(private val context: Context, private val products: List<Pr
             val activity = holder.itemView.context as AppCompatActivity
             activity.findViewById<FrameLayout>(R.id.fragment_container).visibility = View.VISIBLE
             activity.findViewById<RecyclerView>(R.id.recyclerView).visibility = View.GONE
+            activity.findViewById<LinearLayout>(R.id.searchLayout).visibility = View.GONE
             activity.supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .addToBackStack(null)
                 .commit()
         }
     }
+
+    fun updateData(newProducts: List<Product>) {
+        products = newProducts
+        notifyDataSetChanged()
+    }
+
     override fun getItemCount(): Int = products.size
 }

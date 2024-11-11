@@ -20,6 +20,11 @@ android {
             useSupportLibrary = true
         }
     }
+    externalNativeBuild {
+        cmake {
+            path = file("CMakeLists.txt")
+        }
+    }
 
     buildTypes {
         release {
@@ -39,6 +44,7 @@ android {
     }
     buildFeatures {
         compose = true
+        prefab = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"

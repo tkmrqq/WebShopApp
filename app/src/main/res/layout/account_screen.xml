@@ -17,6 +17,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:text="@string/profile"
+        android:textColor="@color/black"
         android:textSize="24sp" />
 
     <RelativeLayout
@@ -42,6 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Заказы:"
+        android:textColor="@color/black"
         android:layout_marginTop="16dp" />
 
 

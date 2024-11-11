@@ -6,11 +6,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.tkmrqq.pmsapp.data.model.CartItem
+import com.tkmrqq.pmsapp.data.model.CartLibrary
 import com.tkmrqq.pmsapp.data.model.Order
 import com.tkmrqq.pmsapp.data.model.Product
 import java.util.Date
 import java.util.Locale
 import java.util.UUID
+import kotlin.random.Random
 
 class CartViewModel : ViewModel() {
     private val _cartItems = MutableLiveData<MutableList<CartItem>>(mutableListOf())
@@ -47,7 +49,8 @@ class CartViewModel : ViewModel() {
     }
 
     private fun updateTotalPrice() {
-        val total = _cartItems.value?.sumOf { it.product.price * it.quantity } ?: 0.0
+        val cartItems = _cartItems.value?.map { "${it.product.id},${it.product.name},${it.quantity},${it.product.price}" }?.toTypedArray() ?: emptyArray()
+        val total = CartLibrary().calculateTotalPrice(cartItems)
         _totalPrice.value = total
     }
 
@@ -66,5 +69,22 @@ class CartViewModel : ViewModel() {
     private fun MutableLiveData<MutableList<CartItem>>.notifyObserver() {
         this.value = this.value
     }
+
+    fun saveCartToFile(filename: String) {
+        val cartItemsArray = getCartItems().toTypedArray()
+        CartLibrary().saveCartToFile(cartItemsArray, cartItemsArray.size, filename)
+    }
+
+    fun loadCartFromFile(filename: String) {
+        val maxItems = 100
+        val id: Int = 0
+        val loadedItems = Array(maxItems) { CartItem(Product(id, "", 0.0), 0) }
+        val itemCount = CartLibrary().loadCartFromFile(loadedItems, maxItems, filename)
+
+        _cartItems.value = loadedItems.take(itemCount).toMutableList()
+        updateTotalPrice()
+        _cartItems.notifyObserver()
+    }
+
 }
 
